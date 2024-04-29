@@ -8,7 +8,7 @@
  * @version @package_version@
  * @author Patrick Gansterer <paroga@paroga.com>
  */
-class nonce_login extends rcube_plugin
+class roundcube_nonce_login extends rcube_plugin
 {
     // registered tasks for this plugin.
     public $task = 'login';
@@ -59,7 +59,7 @@ class nonce_login extends rcube_plugin
                 // insert nonce to database.
                 $rcmail->get_dbh()->query(
                     "INSERT INTO " . $rcmail->db->table_name($this->db_table_auth_nonces)
-                        . " (nonce, expires, user, pass, host)"
+                        . " (nonce, expires, username, pass, hostname)"
                         . " VALUES (?, ?, ?, ?, ?)",
                     $nonce,
                     $sql_expires,
@@ -101,9 +101,9 @@ class nonce_login extends rcube_plugin
 
             if (($data = $rcmail->get_dbh()->fetch_assoc($res))) {
                 // set login data.
-                $args['user'] = $data['user'];
+                $args['user'] = $data['username'];
                 $args['pass'] = $rcmail->decrypt($data['pass']);
-                $args['host'] = $data['host'];
+                $args['host'] = $data['hostname'];
                 $args['cookiecheck'] = false;
                 $args['valid'] = true;
                 $args['abort'] = false;
